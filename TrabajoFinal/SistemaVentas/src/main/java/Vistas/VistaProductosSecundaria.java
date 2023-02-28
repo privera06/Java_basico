@@ -48,7 +48,7 @@ public class VistaProductosSecundaria extends javax.swing.JFrame {
 
         jLabel5.setText("Stock :");
 
-        jLabel7.setText("Ingresar datos de nuevo producto:");
+        jLabel7.setText("Ingresar datos de producto:");
 
         jbGuardar.setText("Guardar");
         jbGuardar.addActionListener(new java.awt.event.ActionListener() {

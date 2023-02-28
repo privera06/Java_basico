@@ -54,7 +54,7 @@ public class VistaEmpleadosSecundaria extends javax.swing.JFrame {
 
         jLabel5.setText("Clave :");
 
-        jLabel7.setText("Ingresar datos de nuevo empleado:");
+        jLabel7.setText("Ingresar datos de empleado:");
 
         jbGuardar.setText("Guardar");
         jbGuardar.addActionListener(new java.awt.event.ActionListener() {

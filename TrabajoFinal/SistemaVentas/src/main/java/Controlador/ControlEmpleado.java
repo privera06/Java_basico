@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controlador;
+
 import Modelo.Empleados;
 import Modelo.MetodosEmpleadosSP;
 import Vistas.VistaEmpleadosPrincipal;
@@ -54,7 +51,7 @@ public class ControlEmpleado implements ActionListener{
         String accion="";
         
         if(ev.getSource() == varJfrVistaEmpPrinc.jbBuscarUsuario){
-            varModEmp.setCodigoProd(varJfrVistaEmpPrinc.jtCodigo.getText());
+            varModEmp.setCodigoProd(varJfrVistaEmpPrinc.txtCodigo.getText());
             
             System.out.println("varModProd.getCodigoProd()"+varModEmp.getCodigoProd());
             try {

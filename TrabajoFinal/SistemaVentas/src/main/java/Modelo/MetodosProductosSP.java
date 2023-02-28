@@ -14,9 +14,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MetodosProductosSP extends ConexionBD{
     
-    public int cantidadColumnas;
-    public DefaultTableModel modelo = new DefaultTableModel();
-    
     public boolean insertarProducto (Productos paramProd) throws SQLException {
 
         CallableStatement stmt;
@@ -86,42 +83,37 @@ public class MetodosProductosSP extends ConexionBD{
         }
     }
     
-    public boolean mostrarProducto (Productos paramProd) throws SQLException {
+    public boolean mostrarProducto (Productos paramProd, DefaultTableModel modelo) throws SQLException {
         ResultSet rs;
         CallableStatement stmt;
         ConexionBD objConexionBD = new ConexionBD();
         objConexionBD.cargarDriver();
         objConexionBD.conectarDB();
-        
+        int cantidadColumnas;
         String query  = "{CALL mostrarProductoSP(?)}";
         
         try{
-            System.out.println("Antes0 executeQuery()");
             stmt = objConexionBD.con.prepareCall(query);
-            System.out.println("Antes1 executeQuery()");
             stmt.setString(1, paramProd.getCodigoProd());
-            System.out.println("Antes2 executeQuery()");
             rs = stmt.executeQuery(); 
-            System.out.println("Paso executeQuery()");
+            
             ResultSetMetaData rsMd = rs.getMetaData();
             cantidadColumnas = rsMd.getColumnCount();
             
+            Object[] filas = new Object[cantidadColumnas];
+            
+            for(int i=1; i<=cantidadColumnas; i++ ){
+                modelo.addColumn(rsMd.getColumnLabel(i));
+            }
+
             while(rs.next()){
                 paramProd.setCodigoProd(rs.getString("codigo_prod"));
                 paramProd.setDescripcion(rs.getString("descripcion"));
                 paramProd.setPrecioUnitario(rs.getDouble("preciounitario"));
                 paramProd.setStock(rs.getInt("stock"));
 
-                modelo.addColumn("CodigoProd");
-                modelo.addColumn("Descripcion");
-                modelo.addColumn("PrecioUnitario");
-                modelo.addColumn("Stock");
-
-                Object[] filas = new Object[cantidadColumnas];
-
                 for(int i=0 ; i< cantidadColumnas ; i++){
                     filas[i] = rs.getObject(i+1);
-                    System.out.println("filas[i]"+filas[i]);
                 }
                 modelo.addRow(filas);
             }
