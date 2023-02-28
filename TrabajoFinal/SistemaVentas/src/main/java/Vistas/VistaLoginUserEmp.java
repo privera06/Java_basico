@@ -139,18 +139,18 @@ public class VistaLoginUserEmp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbIngresarActionPerformed
-        String usuario = txtUsuario.getText();
-        String clave = txtClave.getText();
+        /*String usuario = txtUsuario.getText();
+        String clave = txtClave.getText();*/
 
         /*MetodosSP objMetodoSP = new MetodosSP();
-        objMetodoSP.objConexionBD.cargarDriver();*/
+        objMetodoSP.objConexionBD.cargarDriver();
         
         String permisoTabla;
  
-        try {
+        try {*/
             /*objMetodoSP.objConexionBD.conectarDB();*/
             
-            String listaNomTabla = (String) jcListaTablas.getSelectedItem();
+            /*String listaNomTabla = (String) jcListaTablas.getSelectedItem();
             permisoTabla = switch (listaNomTabla) {
             case "Lista de clientes" -> "clientes";
             case "Lista de productos" -> "productos";
@@ -168,7 +168,7 @@ public class VistaLoginUserEmp extends javax.swing.JFrame {
             
         } catch (SQLException ex) {
             Logger.getLogger(VistaLoginUserEmp.class.getName()).log(Level.SEVERE, null, ex);
-        }      
+        }     */
     }//GEN-LAST:event_jbIngresarActionPerformed
 
     private void jbCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelarActionPerformed
@@ -200,9 +200,9 @@ public class VistaLoginUserEmp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JButton jbCancelar;
-    private javax.swing.JButton jbIngresar;
-    private javax.swing.JComboBox<String> jcListaTablas;
+    public javax.swing.JButton jbCancelar;
+    public javax.swing.JButton jbIngresar;
+    public javax.swing.JComboBox<String> jcListaTablas;
     public javax.swing.JTextField txtClave;
     public javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

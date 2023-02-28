@@ -47,9 +47,7 @@ public class ControlCliente  implements ActionListener{
     /*Metodo con las acciones que deben realizar los botones*/
     @Override
     public void actionPerformed(ActionEvent ev ){
-        
-        
-        
+            
         if(ev.getSource() == varJfrVistaCliPrinc.jbBuscarCli){
             DefaultTableModel modelo = new DefaultTableModel();
             varJfrVistaCliPrinc.jtClientes.setModel(modelo);
