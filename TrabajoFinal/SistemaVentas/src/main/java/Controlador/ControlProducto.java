@@ -41,13 +41,12 @@ public class ControlProducto implements ActionListener {
     public void iniciar(){
         varJfrVistaProd.setTitle("PRODUCTOS");
         varJfrVistaProd.setLocationRelativeTo(null);
+        varJfrVistaProd.setVisible(true);
     }
     
     /*Metodo con las acciones que deben realizar los botones*/
     @Override
     public void actionPerformed(ActionEvent ev ){
-        
-        
         
         if(ev.getSource() == varJfrVistaProd.jbBuscarProd){
             DefaultTableModel modelo = new DefaultTableModel();

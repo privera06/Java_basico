@@ -7,6 +7,7 @@ package Controlador;
 import Modelo.Clientes;
 import Modelo.MetodosClientesSP;
 import Vistas.VistaLoginUserCli;
+import Vistas.VistaPedidos;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -57,9 +58,14 @@ public class ControlLoginUserCli implements ActionListener {
 
                 switch (resultado) {
                     case "ENCONTRADO_CINV" -> JOptionPane.showMessageDialog(null,"Loggin succesfull..!!!");
-                    case "ENCONTRADO_CVAL" -> JOptionPane.showMessageDialog(null,"Invalid password..!!!");
+                    case "ENCONTRADO_CVAL" -> {JOptionPane.showMessageDialog(null,"Invalid password..!!!");
+                                                /*VistaPedidos objVistaPed = new VistaPedidos();
+                                                objVistaPed.*/
+                    }
                     default -> JOptionPane.showMessageDialog(null,"User not found..!!!");
                 }
+                
+                
 
             } catch (SQLException ex) {
                 Logger.getLogger(ControlLoginUserEmp.class.getName()).log(Level.SEVERE, null, ex);

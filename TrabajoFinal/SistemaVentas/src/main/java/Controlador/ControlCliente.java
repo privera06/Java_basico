@@ -42,6 +42,7 @@ public class ControlCliente  implements ActionListener{
     public void iniciar(){
         varJfrVistaCliPrinc.setTitle("CLIENTES");
         varJfrVistaCliPrinc.setLocationRelativeTo(null);
+        varJfrVistaCliPrinc.setVisible(true);
     }
     
     /*Metodo con las acciones que deben realizar los botones*/
