@@ -27,14 +27,14 @@ public class VistaPedidos extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jbAgregar = new javax.swing.JButton();
-        jbEliminar = new javax.swing.JButton();
-        jbMostrar = new javax.swing.JButton();
+        jtPedido = new javax.swing.JTable();
+        jbAgregarProd = new javax.swing.JButton();
+        jbEliminarProd = new javax.swing.JButton();
+        jbMostrarProductoPedido = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtPedido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -53,13 +53,13 @@ public class VistaPedidos extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jtPedido);
 
-        jbAgregar.setText("Agregar a carrito");
+        jbAgregarProd.setText("Agregar a carrito");
 
-        jbEliminar.setText("Eliminar de carrito");
+        jbEliminarProd.setText("Eliminar de carrito");
 
-        jbMostrar.setText("Mostrar carrito");
+        jbMostrarProductoPedido.setText("Mostrar carrito");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,11 +70,11 @@ public class VistaPedidos extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jbAgregar)
+                        .addComponent(jbAgregarProd)
                         .addGap(18, 18, 18)
-                        .addComponent(jbEliminar)
+                        .addComponent(jbEliminarProd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jbMostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jbMostrarProductoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(259, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -84,9 +84,9 @@ public class VistaPedidos extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbAgregar)
-                    .addComponent(jbEliminar)
-                    .addComponent(jbMostrar))
+                    .addComponent(jbAgregarProd)
+                    .addComponent(jbEliminarProd)
+                    .addComponent(jbMostrarProductoPedido))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
 
@@ -130,9 +130,9 @@ public class VistaPedidos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JButton jbAgregar;
-    private javax.swing.JButton jbEliminar;
-    private javax.swing.JButton jbMostrar;
+    public javax.swing.JButton jbAgregarProd;
+    public javax.swing.JButton jbEliminarProd;
+    public javax.swing.JButton jbMostrarProductoPedido;
+    public javax.swing.JTable jtPedido;
     // End of variables declaration//GEN-END:variables
 }

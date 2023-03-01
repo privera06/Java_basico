@@ -27,18 +27,18 @@
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jbAgregarUsuario" min="-2" pref="125" max="-2" attributes="0"/>
+                      <Component id="jbAgregarEmp" min="-2" pref="125" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jbActualizarUsuario" max="32767" attributes="0"/>
+                      <Component id="jbActualizarEmp" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jbEliminarUsuario" min="-2" pref="125" max="-2" attributes="0"/>
+                      <Component id="jbEliminarEmp" min="-2" pref="125" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jLabel1" min="-2" pref="56" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="txtCodigo" min="-2" pref="134" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jbBuscarUsuario" min="-2" pref="82" max="-2" attributes="0"/>
+                      <Component id="jbBuscarEmp" min="-2" pref="82" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" alignment="1" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -53,15 +53,15 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbBuscarUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbBuscarEmp" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="149" max="-2" attributes="0"/>
               <EmptySpace pref="45" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jbAgregarUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbEliminarUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbActualizarUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbAgregarEmp" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbEliminarEmp" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbActualizarEmp" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
           </Group>
@@ -143,45 +143,45 @@
         <Property name="text" type="java.lang.String" value="Codigo:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jbBuscarUsuario">
+    <Component class="javax.swing.JButton" name="jbBuscarEmp">
       <Properties>
         <Property name="text" type="java.lang.String" value="Buscar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBuscarUsuarioActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbBuscarEmpActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="jbAgregarUsuario">
+    <Component class="javax.swing.JButton" name="jbAgregarEmp">
       <Properties>
         <Property name="text" type="java.lang.String" value="Agregar Usuario"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbAgregarUsuarioActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbAgregarEmpActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="jbEliminarUsuario">
+    <Component class="javax.swing.JButton" name="jbEliminarEmp">
       <Properties>
         <Property name="text" type="java.lang.String" value="Eliminar Usuario"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbEliminarUsuarioActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbEliminarEmpActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="jbActualizarUsuario">
+    <Component class="javax.swing.JButton" name="jbActualizarEmp">
       <Properties>
         <Property name="text" type="java.lang.String" value="Actualizar Usuario"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbActualizarUsuarioActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbActualizarEmpActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>

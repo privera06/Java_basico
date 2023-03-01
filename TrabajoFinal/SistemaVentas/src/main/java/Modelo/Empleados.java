@@ -6,11 +6,11 @@ package Modelo;
  */
 public class Empleados {
 
-    public int getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -53,7 +53,7 @@ public class Empleados {
     public void setClave(String clave) {
         this.clave = clave;
     }
-    private int codigo;
+    private String codigo;
     private String nombre;
     private String apellido;
     private String permisos;
