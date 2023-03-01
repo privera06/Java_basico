@@ -38,6 +38,7 @@ public class ControlLoginUserEmp implements ActionListener{
     public void iniciar(){
         varJfrVistaLogEmp.setTitle("LOGIN EMPLEADOS");
         varJfrVistaLogEmp.setLocationRelativeTo(null);
+        varJfrVistaLogEmp.setVisible(true);
     }    
     
     /*Metodo con las acciones que deben realizar los botones*/

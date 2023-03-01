@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +14,40 @@ import javax.swing.table.DefaultTableModel;
  * @author Pamela
  */
 public class MetodosClientesSP {
+    
+        public String validarUsuario (Clientes paramCli) throws SQLException {
+
+        CallableStatement stmt;
+        ConexionBD objConexionBD = new ConexionBD();
+        objConexionBD.cargarDriver();
+        objConexionBD.conectarDB();
+
+        String query  = "{CALL validarUsuarioCliSP(?,?,?)}";
+
+        try{
+            stmt = objConexionBD.con.prepareCall(query);
+            stmt.setString(1, paramCli.getDocumento());
+            stmt.setString(2, paramCli.getClave());
+
+            stmt.executeQuery(); 
+            
+            stmt.registerOutParameter(3, Types.VARCHAR);
+            
+            return stmt.getString("resultadoParamSP");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MetodosClientesSP.class.getName()).log(Level.SEVERE, null, ex);
+            return "Error";
+            
+        } finally{
+            try{
+                objConexionBD.con.close();
+            }catch(SQLException ex){
+                Logger.getLogger(MetodosClientesSP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+        
     public boolean insertarCliente (Clientes paramCli) throws SQLException {
 
         CallableStatement stmt;
