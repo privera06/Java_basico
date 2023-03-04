@@ -1,10 +1,11 @@
 package Controlador;
 
 import Modelo.Productos;
-import Modelo.MetodosProductosSP;
+import Modelo.Pedido;
+import Modelo.MetodosPedidosSP;
 import Vistas.VistaEmpleadosPrincipal;
-import Vistas.VistaPedidos;
-import Vistas.VistaEmpleadosSecundaria;
+import Vistas.VistaPedidosPrincipal;
+import Vistas.VistaPedidosSecundaria;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -20,45 +21,101 @@ import javax.swing.table.DefaultTableModel;
 public class ControlPedido implements ActionListener {
 
     /*Clases creadas en Modelo y Vista*/
+    private Pedido varModPedido;
     private Productos varModProductoPedido;
     private MetodosPedidosSP varMetPed;
-    private VistaPedidos varJfrVistaPedPrinc;
-    private VistaEmpleadosSecundaria varJfrVistaEmpSec;
+    private VistaPedidosPrincipal varJfrVistaPedPrinc;
+    private VistaPedidosSecundaria varJfrVistaPedSec;
     String accion;
+
     /*Se crea el constructor de la clase y se le pasa el Modelo y la vista creada*/
-    public ControlPedido(Productos modProductoPedido, MetodosPedidosSP metPed, VistaPedidos varJfrVistaPedPrinc, VistaEmpleadosSecundaria jfrVistaEmpSec) {
+    public ControlPedido(Productos modProductoPedido, MetodosPedidosSP metPed, VistaPedidosPrincipal varJfrVistaPedPrinc, VistaPedidosSecundaria varJfrVistaPedSec) {
 
         /*Se setean las variables con los valores recibidos en el Modelo y la Vista*/
         this.varModProductoPedido = modProductoPedido;
         this.varMetPed = metPed;
         this.varJfrVistaPedPrinc = varJfrVistaPedPrinc;
-        this.varJfrVistaEmpSec = jfrVistaEmpSec;
+        this.varJfrVistaPedSec = varJfrVistaPedSec;
 
-        this.varJfrVistaPedPrinc.jbAgregarProd.addActionListener(this);
-        this.varJfrVistaPedPrinc.jbEliminarProd.addActionListener(this);
-        this.varJfrVistaPedPrinc.jbMostrarProductoPedido.addActionListener(this);        
-        this.varJfrVistaEmpSec.jbGuardar.addActionListener(this);
+        this.varJfrVistaPedPrinc.jbAgregarProdPedido.addActionListener(this);
+        this.varJfrVistaPedPrinc.jbEliminarProdPedido.addActionListener(this);
+        this.varJfrVistaPedPrinc.jbMostrarPedido.addActionListener(this);
+        this.varJfrVistaPedSec.jbCerrar.addActionListener(this);
     }
 
     /*Metodo para iniciar la vista*/
     public void iniciar() {
         varJfrVistaPedPrinc.setTitle("PEDIDOS");
         varJfrVistaPedPrinc.setLocationRelativeTo(null);
+        
+        varJfrVistaPedSec.setTitle("VER PEDIDO");
+        varJfrVistaPedSec.setLocationRelativeTo(null);
     }
 
     /*Metodo con las acciones que deben realizar los botones*/
     @Override
     public void actionPerformed(ActionEvent ev) {
 
-        if (ev.getSource() == varJfrVistaPedPrinc.jbAgregarProd) {
+        if (ev.getSource() == varJfrVistaPedPrinc.jbAgregarProdPedido) {
+            DefaultTableModel modelo = new DefaultTableModel();
+            
+
+            int filaTabla = varJfrVistaPedPrinc.jtPedido.getSelectedRow(); //nos retorna un producto
+            
+            int idPedido = 0;
+            varModPedido.setCodigoPed(varJfrVistaPedPrinc.txtIdPedido.getText());
+            
+            if(varModPedido.getCodigoPed().isEmpty()){
+                accion = "INSERT";
+            }
+            else{
+                accion = "UPDATE";
+            }
+            varModProductoPedido.setCodigoProd(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
+            varModProductoPedido.setDescripcion(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 1).toString());
+            varModProductoPedido.setPrecioUnitario(Double.parseDouble(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 2).toString()));
+            varModProductoPedido.setStock(Integer.parseInt(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 3).toString()));
+            
+            varModPedido.agregarProducto(varModProductoPedido);
+            
+            try {
+
+                if ("INSERT".equals(accion)) {
+                    if (varMetPed.insertarPedido(varModPedido)) {
+                        JOptionPane.showMessageDialog(null, "Pedido creado: "+idPedido);                        
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error al crear pedido");
+                    }
+                } else if ("UPDATE".equals(accion)) {
+                    if (varMetPed.insertarProductoPedido(varModPedido)) {
+                        JOptionPane.showMessageDialog(null, "Producto añadido");                        
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error al añadir producto");
+                    }
+
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if (ev.getSource() == varJfrVistaPedPrinc.jbMostrarPedido) {
+            /*Se setean las variables del Modelo obtenidas de las cajas de texto de la Vista*/
+            //varModProductoPedido.setCodigo(varJfrVistaEmpSec.txtCodigo.getText());
+
             DefaultTableModel modelo = new DefaultTableModel();
             varJfrVistaPedPrinc.jtPedido.setModel(modelo);
 
-            varModProductoPedido.setCodigo(varJfrVistaPedPrinc.txtCodigo.getText());
+            varModPedido.setCodigoPed(varJfrVistaPedPrinc.txtIdPedido.getText());
+            
+            
+            varJfrVistaPedSec.txtIdPedido.setText(varModPedido.getCodigoPed());
+            varJfrVistaPedSec.setVisible(true);
 
             try {
-                if (!varMetPed.mostrarEmpleado(varModProductoPedido, modelo)) {
-                    JOptionPane.showMessageDialog(null, "Error al realizar la busqueda");
+                if (!varMetPed.mostrarPedido(varModPedido, modelo)) {
+                    JOptionPane.showMessageDialog(null, "Error al realizar la busqueda del pedido");
                 }
 
             } catch (SQLException ex) {
@@ -66,84 +123,20 @@ public class ControlPedido implements ActionListener {
             }
         }
 
-        if (ev.getSource() == varJfrVistaPedPrinc.jbAgregarEmp) {
-            accion = "INSERT";
-            varJfrVistaEmpSec.setVisible(true);
-        }
-
-        if (ev.getSource() == varJfrVistaPedPrinc.jbActualizarEmp) {
-
-            DefaultTableModel modelo = new DefaultTableModel();
-            accion = "UPDATE";
-
-            try {
-                int filaTabla = varJfrVistaPedPrinc.jtPedido.getSelectedRow();
-
-                varModProductoPedido.setCodigo(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
-                varModProductoPedido.setNombre(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 1).toString());
-                varModProductoPedido.setApellido(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 2).toString());
-                varModProductoPedido.setPermisos(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 3).toString());
-                varModProductoPedido.setUsuario(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 4).toString());
-                varModProductoPedido.setClave(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 5).toString());
-
-                //varJfrVistaEmpSec.txtCodigo.setText(varModProductoPedido.getCodigoCli()); Codigo no presente en vista
-                varJfrVistaEmpSec.txtNombre.setText(varModProductoPedido.getNombre());
-                varJfrVistaEmpSec.txtApellido.setText(varModProductoPedido.getApellido());
-                varJfrVistaEmpSec.txtUsuario.setText(varModProductoPedido.getUsuario());
-                varJfrVistaEmpSec.txtClave.setText(varModProductoPedido.getClave());
-
-                varJfrVistaEmpSec.setVisible(true);
-
-                if (!varMetPed.mostrarEmpleado(varModProductoPedido, modelo)) {
-                    JOptionPane.showMessageDialog(null, "Error al realizar la actualizacion");
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (ev.getSource() == varJfrVistaEmpSec.jbGuardar) {
-            /*Se setean las variables del Modelo obtenidas de las cajas de texto de la Vista*/
-            //varModProductoPedido.setCodigo(varJfrVistaEmpSec.txtCodigo.getText());
-            varModProductoPedido.setNombre(varJfrVistaEmpSec.txtNombre.getText());
-            varModProductoPedido.setApellido(varJfrVistaEmpSec.txtApellido.getText());
-            varModProductoPedido.setUsuario(varJfrVistaEmpSec.txtUsuario.getText());
-            varModProductoPedido.setClave(varJfrVistaEmpSec.txtClave.getText());
-            varModProductoPedido.setPermisos(varJfrVistaEmpSec.txtClave.getText()); //falta
-
-            try {
-                if ("INSERT".equals(accion)) {
-                    if (varMetPed.insertarEmpleado(varModProductoPedido)) {
-                        JOptionPane.showMessageDialog(null, "Registro exitoso");
-                        varJfrVistaEmpSec.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al registrar");
-                    }
-                } else if ("UPDATE".equals(accion)) {
-                    if (varMetPed.actualizarEmpleado(varModProductoPedido)) {
-                        JOptionPane.showMessageDialog(null, "Actualizacion exitosa");
-                        varJfrVistaEmpSec.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al actualizar");
-                    }
-
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (ev.getSource() == varJfrVistaPedPrinc.jbEliminarEmp) {
+        if (ev.getSource() == varJfrVistaPedPrinc.jbEliminarProdPedido) {
             int filaTabla = varJfrVistaPedPrinc.jtPedido.getSelectedRow();
-            varModProductoPedido.setCodigo(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
 
+            varModPedido.setCodigoPed(varJfrVistaPedPrinc.txtIdPedido.getText());
+
+            varModProductoPedido.setCodigoProd(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
+
+            varModPedido.eliminarProducto(varModProductoPedido);
+            
             try {
-                if (varMetPed.eliminarEmpleado(varModProductoPedido)) {
-                    JOptionPane.showMessageDialog(null, "Registro eliminado");
+                if (varMetPed.eliminarProductoPedido(varModPedido)) {
+                    JOptionPane.showMessageDialog(null, "Producto eliminado");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error al registrar");
+                    JOptionPane.showMessageDialog(null, "Error al eliminar");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
