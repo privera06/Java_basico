@@ -88,23 +88,24 @@ public class MetodosEmpleadosSP extends ConexionBD {
         }
     }
 
-    public boolean actualizarEmpleado(Empleados paramEmp) throws SQLException {
+    public boolean actualizarEmpleado(String paramEmp_ori, Empleados paramEmp_new) throws SQLException {
 
         CallableStatement stmt;
         ConexionBD objConexionBD = new ConexionBD();
         objConexionBD.cargarDriver();
         objConexionBD.conectarDB();
 
-        String query = "{CALL actualizarEmpleadoSP(?,?,?,?,?,?)}";
+        String query = "{CALL actualizarEmpleadoSP(?,?,?,?,?,?,?)}";
 
         try {
             stmt = objConexionBD.con.prepareCall(query);
-            stmt.setString(1, paramEmp.getCodigo());
-            stmt.setString(2, paramEmp.getNombre());
-            stmt.setString(3, paramEmp.getApellido());
-            stmt.setString(4, paramEmp.getPermisos());
-            stmt.setString(5, paramEmp.getUsuario());
-            stmt.setString(6, paramEmp.getClave());
+            stmt.setString(1, paramEmp_ori);
+            stmt.setString(2, paramEmp_new.getCodigo());
+            stmt.setString(3, paramEmp_new.getNombre());
+            stmt.setString(4, paramEmp_new.getApellido());
+            stmt.setString(5, paramEmp_new.getPermisos());
+            stmt.setString(6, paramEmp_new.getUsuario());
+            stmt.setString(7, paramEmp_new.getClave());
 
             stmt.executeQuery();
 
@@ -148,7 +149,7 @@ public class MetodosEmpleadosSP extends ConexionBD {
             }
 
             while (rs.next()) {
-                paramEmp.setCodigo(rs.getString("codigo"));
+                paramEmp.setCodigo(rs.getString("codigo_emp"));
                 paramEmp.setNombre(rs.getString("nombre"));
                 paramEmp.setApellido(rs.getString("apellido"));
                 paramEmp.setPermisos(rs.getString("permisos"));

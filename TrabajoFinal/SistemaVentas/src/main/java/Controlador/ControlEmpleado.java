@@ -41,9 +41,17 @@ public class ControlEmpleado implements ActionListener {
     }
 
     /*Metodo para iniciar la vista*/
-    public void iniciar() {
+    public void iniciar() throws SQLException {
         varJfrVistaEmpPrinc.setTitle("EMPLEADOS");
         varJfrVistaEmpPrinc.setLocationRelativeTo(null);
+        varJfrVistaEmpPrinc.setVisible(true);
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        varJfrVistaEmpPrinc.jtEmpleados.setModel(modelo);
+
+        varModEmp.setCodigo("");
+        if (!varMetEmp.mostrarEmpleado(varModEmp, modelo))
+            JOptionPane.showMessageDialog(null,"Ocurrio un error al mostrar la lista");
     }
 
     /*Metodo con las acciones que deben realizar los botones*/
@@ -62,55 +70,93 @@ public class ControlEmpleado implements ActionListener {
                 }
 
             } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
         if (ev.getSource() == varJfrVistaEmpPrinc.jbAgregarEmp) {
+            
             accion = "INSERT";
+            
+            varJfrVistaEmpSec.setLocationRelativeTo(null);
             varJfrVistaEmpSec.setVisible(true);
+
+            varJfrVistaEmpSec.txtCodigo.setText("");
+            varJfrVistaEmpSec.txtNombre.setText("");
+            varJfrVistaEmpSec.txtApellido.setText("");
+            varJfrVistaEmpSec.txtUsuario.setText("");
+            varJfrVistaEmpSec.txtClave.setText("");            
+            varJfrVistaEmpSec.checkboxClientes.setState(false);
+            varJfrVistaEmpSec.checkboxEmpleados.setState(false);
+            varJfrVistaEmpSec.checkboxProductos.setState(false);
+            
         }
 
         if (ev.getSource() == varJfrVistaEmpPrinc.jbActualizarEmp) {
 
-            DefaultTableModel modelo = new DefaultTableModel();
             accion = "UPDATE";
 
-            try {
-                int filaTabla = varJfrVistaEmpPrinc.jtEmpleados.getSelectedRow();
+            int filaTabla = varJfrVistaEmpPrinc.jtEmpleados.getSelectedRow();
+            String permisos;
 
-                varModEmp.setCodigo(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 0).toString());
-                varModEmp.setNombre(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 1).toString());
-                varModEmp.setApellido(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 2).toString());
-                varModEmp.setPermisos(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 3).toString());
-                varModEmp.setUsuario(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 4).toString());
-                varModEmp.setClave(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 5).toString());
+            varModEmp.setCodigo(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 0).toString());
+            varModEmp.setNombre(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 1).toString());
+            varModEmp.setApellido(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 2).toString());
+            varModEmp.setPermisos(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 3).toString());
+            varModEmp.setUsuario(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 4).toString());
+            varModEmp.setClave(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 5).toString());
 
-                //varJfrVistaEmpSec.txtCodigo.setText(varModEmp.getCodigoCli()); Codigo no presente en vista
-                varJfrVistaEmpSec.txtNombre.setText(varModEmp.getNombre());
-                varJfrVistaEmpSec.txtApellido.setText(varModEmp.getApellido());
-                varJfrVistaEmpSec.txtUsuario.setText(varModEmp.getUsuario());
-                varJfrVistaEmpSec.txtClave.setText(varModEmp.getClave());
+            varJfrVistaEmpSec.setLocationRelativeTo(null);
+            varJfrVistaEmpSec.setVisible(true);
 
-                varJfrVistaEmpSec.setVisible(true);
+            varJfrVistaEmpSec.txtCodigo.setText(varModEmp.getCodigo());
+            varJfrVistaEmpSec.txtNombre.setText(varModEmp.getNombre());
+            varJfrVistaEmpSec.txtApellido.setText(varModEmp.getApellido());
+            varJfrVistaEmpSec.txtUsuario.setText(varModEmp.getUsuario());
+            varJfrVistaEmpSec.txtClave.setText(varModEmp.getClave());
+            permisos = varModEmp.getPermisos();
+            
+            if(permisos.contains("clientes"))
+                varJfrVistaEmpSec.checkboxClientes.setState(true);
+            
+            if(permisos.contains("empleados"))
+                varJfrVistaEmpSec.checkboxEmpleados.setState(true);
+            
+            if(permisos.contains("productos"))
+                varJfrVistaEmpSec.checkboxProductos.setState(true);
 
-                if (!varMetEmp.mostrarEmpleado(varModEmp, modelo)) {
-                    JOptionPane.showMessageDialog(null, "Error al realizar la actualizacion");
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
 
         if (ev.getSource() == varJfrVistaEmpSec.jbGuardar) {
+            
+            String varModEmp_ori = varModEmp.getCodigo();
+            
             /*Se setean las variables del Modelo obtenidas de las cajas de texto de la Vista*/
-            //varModEmp.setCodigo(varJfrVistaEmpSec.txtCodigo.getText());
+            varModEmp.setCodigo(varJfrVistaEmpSec.txtCodigo.getText());
             varModEmp.setNombre(varJfrVistaEmpSec.txtNombre.getText());
             varModEmp.setApellido(varJfrVistaEmpSec.txtApellido.getText());
             varModEmp.setUsuario(varJfrVistaEmpSec.txtUsuario.getText());
             varModEmp.setClave(varJfrVistaEmpSec.txtClave.getText());
-            varModEmp.setPermisos(varJfrVistaEmpSec.txtClave.getText()); //falta
+            String permisos = "";
+            String separador= ";";
+
+            if(varJfrVistaEmpSec.checkboxClientes.getState()){
+                permisos="clientes";
+            }
+            if(varJfrVistaEmpSec.checkboxEmpleados.getState()){
+                if(permisos.isEmpty())
+                    permisos="empleados";
+                else 
+                    permisos=permisos+separador+"empleados";
+            }
+            if(varJfrVistaEmpSec.checkboxProductos.getState()){
+                if(permisos.isEmpty())
+                    permisos="productos";
+                else 
+                    permisos=permisos+separador+"productos";
+            }
+            
+            varModEmp.setPermisos(permisos); 
 
             try {
                 if ("INSERT".equals(accion)) {
@@ -121,7 +167,7 @@ public class ControlEmpleado implements ActionListener {
                         JOptionPane.showMessageDialog(null, "Error al registrar");
                     }
                 } else if ("UPDATE".equals(accion)) {
-                    if (varMetEmp.actualizarEmpleado(varModEmp)) {
+                    if (varMetEmp.actualizarEmpleado(varModEmp_ori, varModEmp)) {
                         JOptionPane.showMessageDialog(null, "Actualizacion exitosa");
                         varJfrVistaEmpSec.dispose();
                     } else {
@@ -131,11 +177,12 @@ public class ControlEmpleado implements ActionListener {
                 }
 
             } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
         if (ev.getSource() == varJfrVistaEmpPrinc.jbEliminarEmp) {
+            
             int filaTabla = varJfrVistaEmpPrinc.jtEmpleados.getSelectedRow();
             varModEmp.setCodigo(varJfrVistaEmpPrinc.jtEmpleados.getValueAt(filaTabla, 0).toString());
 
@@ -146,7 +193,7 @@ public class ControlEmpleado implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Error al registrar");
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

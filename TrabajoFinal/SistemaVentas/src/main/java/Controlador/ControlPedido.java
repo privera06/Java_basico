@@ -3,12 +3,14 @@ package Controlador;
 import Modelo.Productos;
 import Modelo.Pedido;
 import Modelo.MetodosPedidosSP;
-import Vistas.VistaEmpleadosPrincipal;
+import Modelo.MetodosProductosSP;
 import Vistas.VistaPedidosPrincipal;
 import Vistas.VistaPedidosSecundaria;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -21,126 +23,161 @@ import javax.swing.table.DefaultTableModel;
 public class ControlPedido implements ActionListener {
 
     /*Clases creadas en Modelo y Vista*/
+    private Productos varModProd;
     private Pedido varModPedido;
-    private Productos varModProductoPedido;
+    private MetodosProductosSP varMetProd;
     private MetodosPedidosSP varMetPed;
     private VistaPedidosPrincipal varJfrVistaPedPrinc;
     private VistaPedidosSecundaria varJfrVistaPedSec;
-    String accion;
+
+    int flag = 0;
+    Double total = 0.0; 
+    int num1[] = new int[6];
+    double num2[] = new double[6];
 
     /*Se crea el constructor de la clase y se le pasa el Modelo y la vista creada*/
-    public ControlPedido(Productos modProductoPedido, MetodosPedidosSP metPed, VistaPedidosPrincipal varJfrVistaPedPrinc, VistaPedidosSecundaria varJfrVistaPedSec) {
+    public ControlPedido(Productos modProd, Pedido modPed, MetodosProductosSP metProd, MetodosPedidosSP metPed, VistaPedidosPrincipal jfrVistaPedPrinc, VistaPedidosSecundaria jfrVistaPedSec) {
 
         /*Se setean las variables con los valores recibidos en el Modelo y la Vista*/
-        this.varModProductoPedido = modProductoPedido;
+        this.varModProd = modProd;
+        this.varModPedido = modPed;
+        this.varMetProd = metProd;
         this.varMetPed = metPed;
-        this.varJfrVistaPedPrinc = varJfrVistaPedPrinc;
-        this.varJfrVistaPedSec = varJfrVistaPedSec;
+        this.varJfrVistaPedPrinc = jfrVistaPedPrinc;
+        this.varJfrVistaPedSec = jfrVistaPedSec;
 
         this.varJfrVistaPedPrinc.jbAgregarProdPedido.addActionListener(this);
-        this.varJfrVistaPedPrinc.jbEliminarProdPedido.addActionListener(this);
-        this.varJfrVistaPedPrinc.jbMostrarPedido.addActionListener(this);
+        this.varJfrVistaPedPrinc.jbVerPedido.addActionListener(this);
         this.varJfrVistaPedSec.jbCerrar.addActionListener(this);
     }
-
+    
     /*Metodo para iniciar la vista*/
-    public void iniciar() {
+    public void iniciar() throws SQLException {
         varJfrVistaPedPrinc.setTitle("PEDIDOS");
         varJfrVistaPedPrinc.setLocationRelativeTo(null);
+        varJfrVistaPedPrinc.setVisible(true);
         
-        varJfrVistaPedSec.setTitle("VER PEDIDO");
-        varJfrVistaPedSec.setLocationRelativeTo(null);
+        DefaultTableModel modelo = new DefaultTableModel();
+        varJfrVistaPedPrinc.jtPedido.setModel(modelo);
+        
+        varModProd.setCodigoProd("");  
+        if(!varMetProd.mostrarProducto(varModProd, modelo))
+            JOptionPane.showMessageDialog(null,"Ocurrio un error al mostrar la lista");
+        
+        if(flag == 0)
+        {
+            Random numAleatorio = new Random();
+            varModPedido.setCodigoPed(String.valueOf(numAleatorio.nextInt(10000)));
+        }
+        varJfrVistaPedPrinc.txtIdPedido.setText(varModPedido.getCodigoPed());
+        varJfrVistaPedPrinc.txtCantidad.setText("0");
+        varJfrVistaPedPrinc.txtProducto.setText("");
+        varJfrVistaPedPrinc.txtTotal.setText("0.0");
+        varJfrVistaPedSec.txtTotal.setText("0.0");
+        varJfrVistaPedSec.txtPrecProd_1.setText("0.0");
+        varJfrVistaPedSec.txtPrecProd_2.setText("0.0");
+        varJfrVistaPedSec.txtPrecProd_3.setText("0.0");
+        varJfrVistaPedSec.txtPrecProd_4.setText("0.0");
+        varJfrVistaPedSec.txtPrecProd_5.setText("0.0");
     }
+
 
     /*Metodo con las acciones que deben realizar los botones*/
     @Override
     public void actionPerformed(ActionEvent ev) {
+       
 
         if (ev.getSource() == varJfrVistaPedPrinc.jbAgregarProdPedido) {
-            DefaultTableModel modelo = new DefaultTableModel();
-            
 
-            int filaTabla = varJfrVistaPedPrinc.jtPedido.getSelectedRow(); //nos retorna un producto
-            
-            int idPedido = 0;
-            varModPedido.setCodigoPed(varJfrVistaPedPrinc.txtIdPedido.getText());
-            
-            if(varModPedido.getCodigoPed().isEmpty()){
-                accion = "INSERT";
-            }
-            else{
-                accion = "UPDATE";
-            }
-            varModProductoPedido.setCodigoProd(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
-            varModProductoPedido.setDescripcion(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 1).toString());
-            varModProductoPedido.setPrecioUnitario(Double.parseDouble(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 2).toString()));
-            varModProductoPedido.setStock(Integer.parseInt(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 3).toString()));
-            
-            varModPedido.agregarProducto(varModProductoPedido);
-            
-            try {
+            int filaTabla = varJfrVistaPedPrinc.jtPedido.getSelectedRow(); //nos retorna un producto     
 
-                if ("INSERT".equals(accion)) {
-                    if (varMetPed.insertarPedido(varModPedido)) {
-                        JOptionPane.showMessageDialog(null, "Pedido creado: "+idPedido);                        
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al crear pedido");
-                    }
-                } else if ("UPDATE".equals(accion)) {
-                    if (varMetPed.insertarProductoPedido(varModPedido)) {
-                        JOptionPane.showMessageDialog(null, "Producto añadido");                        
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al añadir producto");
-                    }
+            varModPedido.setCantidad(Integer.parseInt(varJfrVistaPedPrinc.txtCantidad.getText()));
+             varModProd.setPrecioUnitario(filaTabla);
+            varModProd.setCodigoProd(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
+            varModProd.setPrecioUnitario(Double.parseDouble(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 2).toString()));
 
+            varJfrVistaPedPrinc.setVisible(true);
+
+            varJfrVistaPedPrinc.jtPedido.setValueAt(varModPedido.getCantidad(), filaTabla, 0);
+            
+            switch (varJfrVistaPedPrinc.txtProducto.getText()) {
+                case "PRD0001" -> {
+                    num1[0]=varModPedido.getCantidad();
+                    varJfrVistaPedSec.txtCantProd_1.setText(String.valueOf(varModPedido.getCantidad()));
+                    num2[0]=num1[0]*varModProd.getPrecioUnitario();
+                    total = total + num2[0];
+                    varJfrVistaPedSec.txtPrecProd_1.setText(String.valueOf(num2[0]));
                 }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+                case "PRD0002" -> {
+                    num1[1]=varModPedido.getCantidad();
+                    varJfrVistaPedSec.txtCantProd_2.setText(String.valueOf(varModPedido.getCantidad()));
+                    num2[1]=num1[1]*varModProd.getPrecioUnitario();
+                    total = total + num2[1];
+                    varJfrVistaPedSec.txtPrecProd_2.setText(String.valueOf(num2[1]));
+                }
+                case "PRD0003" -> {
+                    num1[2]=varModPedido.getCantidad();
+                    varJfrVistaPedSec.txtCantProd_3.setText(String.valueOf(varModPedido.getCantidad()));
+                    num2[2]=num1[2]*varModProd.getPrecioUnitario();
+                    total = total + num2[2];
+                    varJfrVistaPedSec.txtPrecProd_3.setText(String.valueOf(num2[2]));
+                }
+                case "PRD0004" -> {
+                    num1[3]=varModPedido.getCantidad();
+                    varJfrVistaPedSec.txtCantProd_4.setText(String.valueOf(varModPedido.getCantidad()));
+                    num2[3]=num1[3]*varModProd.getPrecioUnitario();
+                    total = total + num2[3];
+                    varJfrVistaPedSec.txtPrecProd_4.setText(String.valueOf(num2[3]));
+                }
+                case "PRD0005" -> {
+                    num1[4]=varModPedido.getCantidad();
+                    varJfrVistaPedSec.txtCantProd_5.setText(String.valueOf(varModPedido.getCantidad()));
+                    num2[4]=num1[4]*varModProd.getPrecioUnitario();
+                    total = total + num2[4];
+                    varJfrVistaPedSec.txtPrecProd_5.setText(String.valueOf(num2[4]));
+                }
+                default -> {
+                }
             }
+            
+            varJfrVistaPedPrinc.txtTotal.setText(String.valueOf(total));
+                          
+            JOptionPane.showMessageDialog(null, "Producto agregado: "+varModPedido.getCodigoPed());                        
+
         }
 
-        if (ev.getSource() == varJfrVistaPedPrinc.jbMostrarPedido) {
-            /*Se setean las variables del Modelo obtenidas de las cajas de texto de la Vista*/
-            //varModProductoPedido.setCodigo(varJfrVistaEmpSec.txtCodigo.getText());
-
-            DefaultTableModel modelo = new DefaultTableModel();
-            varJfrVistaPedPrinc.jtPedido.setModel(modelo);
+        if (ev.getSource() == varJfrVistaPedPrinc.jbVerPedido) {
 
             varModPedido.setCodigoPed(varJfrVistaPedPrinc.txtIdPedido.getText());
-            
-            
+
             varJfrVistaPedSec.txtIdPedido.setText(varModPedido.getCodigoPed());
-            varJfrVistaPedSec.setVisible(true);
-
-            try {
-                if (!varMetPed.mostrarPedido(varModPedido, modelo)) {
-                    JOptionPane.showMessageDialog(null, "Error al realizar la busqueda del pedido");
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (ev.getSource() == varJfrVistaPedPrinc.jbEliminarProdPedido) {
-            int filaTabla = varJfrVistaPedPrinc.jtPedido.getSelectedRow();
-
-            varModPedido.setCodigoPed(varJfrVistaPedPrinc.txtIdPedido.getText());
-
-            varModProductoPedido.setCodigoProd(varJfrVistaPedPrinc.jtPedido.getValueAt(filaTabla, 0).toString());
-
-            varModPedido.eliminarProducto(varModProductoPedido);
+            varJfrVistaPedSec.txtCantProd_1.setText(String.valueOf(num1[0]));
+            varJfrVistaPedSec.txtCantProd_2.setText(String.valueOf(num1[1]));
+            varJfrVistaPedSec.txtCantProd_3.setText(String.valueOf(num1[2]));
+            varJfrVistaPedSec.txtCantProd_4.setText(String.valueOf(num1[3]));
+            varJfrVistaPedSec.txtCantProd_5.setText(String.valueOf(num1[4]));
             
+            varJfrVistaPedSec.txtPrecProd_1.getText();
+            varJfrVistaPedSec.txtPrecProd_2.getText();
+            varJfrVistaPedSec.txtPrecProd_3.getText();
+            varJfrVistaPedSec.txtPrecProd_4.getText();
+            varJfrVistaPedSec.txtPrecProd_5.getText();
+                    
+            varJfrVistaPedSec.txtTotal.setText(String.valueOf(total));
+            
+            varJfrVistaPedSec.setVisible(true);
+        }
+
+        if(ev.getSource() == varJfrVistaPedSec.jbCerrar){
+            varJfrVistaPedSec.dispose();
+            flag = 1;
             try {
-                if (varMetPed.eliminarProductoPedido(varModPedido)) {
-                    JOptionPane.showMessageDialog(null, "Producto eliminado");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error al eliminar");
-                }
+                iniciar();
             } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+
     }
 }

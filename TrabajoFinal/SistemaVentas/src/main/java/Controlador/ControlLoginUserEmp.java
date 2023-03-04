@@ -78,7 +78,8 @@ public class ControlLoginUserEmp implements ActionListener{
                 switch (resultado) {
                     case "ENCONTRADO_CP" -> {
                         login = 1;
-                        JOptionPane.showMessageDialog(null,"Loggin succesfull..!!!");                    
+                        JOptionPane.showMessageDialog(null,"Loggin succesfull..!!!"); 
+                        varJfrVistaLogEmp.dispose();
                     }
                     case "ENCONTRADO_SP" -> {
                         login = 0;

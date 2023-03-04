@@ -4,11 +4,6 @@
  */
 package Vistas;
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author Pamela
@@ -53,34 +48,13 @@ public class VistaLoginUserEmp extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(0, 102, 102));
         jLabel6.setText(" SISTEMA DE VENTAS");
 
-        txtUsuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuarioActionPerformed(evt);
-            }
-        });
-
         jbIngresar.setForeground(new java.awt.Color(51, 0, 204));
         jbIngresar.setText("Ingresar");
-        jbIngresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbIngresarActionPerformed(evt);
-            }
-        });
 
         jbCancelar.setForeground(new java.awt.Color(51, 0, 204));
         jbCancelar.setText("Cancelar");
-        jbCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbCancelarActionPerformed(evt);
-            }
-        });
 
         jcListaTablas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--seleccione--", "Lista de clientes", "Lista de productos", "Lista de empleados" }));
-        jcListaTablas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcListaTablasActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Seleccionar :");
 
@@ -139,51 +113,6 @@ public class VistaLoginUserEmp extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jbIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbIngresarActionPerformed
-        /*String usuario = txtUsuario.getText();
-        String clave = txtClave.getText();*/
-
-        /*MetodosSP objMetodoSP = new MetodosSP();
-        objMetodoSP.objConexionBD.cargarDriver();
-        
-        String permisoTabla;
- 
-        try {*/
-            /*objMetodoSP.objConexionBD.conectarDB();*/
-            
-            /*String listaNomTabla = (String) jcListaTablas.getSelectedItem();
-            permisoTabla = switch (listaNomTabla) {
-            case "Lista de clientes" -> "clientes";
-            case "Lista de productos" -> "productos";
-            case "Lista de empleados" -> "empleados";
-            default -> "invalido";
-            };
-
-            String resultado = objMetodoSP.getUsuarioValidoSP(usuario, clave,permisoTabla );
-            
-            switch (resultado) {
-                case "ENCONTRADO_CP" -> JOptionPane.showMessageDialog(null,"Loggin succesfull..!!!");
-                case "ENCONTRADO_SP" -> JOptionPane.showMessageDialog(null,"User found no permissions..!!!");
-                default -> JOptionPane.showMessageDialog(null,"User not found or incorrect credentials..!!!");
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(VistaLoginUserEmp.class.getName()).log(Level.SEVERE, null, ex);
-        }     */
-    }//GEN-LAST:event_jbIngresarActionPerformed
-
-    private void jbCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelarActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_jbCancelarActionPerformed
-
-    private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsuarioActionPerformed
-
-    private void jcListaTablasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcListaTablasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jcListaTablasActionPerformed
 
     /**
      * @param args the command line arguments

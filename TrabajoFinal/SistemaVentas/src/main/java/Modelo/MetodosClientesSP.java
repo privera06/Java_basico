@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MetodosClientesSP {
     
-        public String validarUsuario (Clientes paramCli) throws SQLException {
+    public String validarUsuario (Clientes paramCli) throws SQLException {
 
         CallableStatement stmt;
         ConexionBD objConexionBD = new ConexionBD();
@@ -55,7 +55,7 @@ public class MetodosClientesSP {
         objConexionBD.cargarDriver();
         objConexionBD.conectarDB();
         
-        String query  = "{CALL insertarClienteSP(?,?,?,?)}";
+        String query  = "{CALL insertarClienteSP(?,?,?,?,?)}";
 
         try{
             stmt = objConexionBD.con.prepareCall(query);
@@ -83,22 +83,23 @@ public class MetodosClientesSP {
         }
     }
     
-    public boolean actualizarCliente (Clientes paramCli) throws SQLException {
+    public boolean actualizarCliente (String paramCli_ori, Clientes paramCli_new) throws SQLException {
 
         CallableStatement stmt;
         ConexionBD objConexionBD = new ConexionBD();
         objConexionBD.cargarDriver();
         objConexionBD.conectarDB();
                 
-        String query  = "{CALL actualizarClienteSP(?,?,?,?,?)}";
+        String query  = "{CALL actualizarClienteSP(?,?,?,?,?,?)}";
         
         try{
             stmt = objConexionBD.con.prepareCall(query);
-            stmt.setString(1, paramCli.getCodigoCli());
-            stmt.setString(2, paramCli.getNombre());
-            stmt.setString(3, paramCli.getApellido());
-            stmt.setString(4, paramCli.getDocumento());
-            stmt.setString(5, paramCli.getClave());
+            stmt.setString(1, paramCli_ori);
+            stmt.setString(2, paramCli_new.getCodigoCli());
+            stmt.setString(3, paramCli_new.getNombre());
+            stmt.setString(4, paramCli_new.getApellido());
+            stmt.setString(5, paramCli_new.getDocumento());
+            stmt.setString(6, paramCli_new.getClave());
 
             stmt.executeQuery(); 
             
@@ -142,9 +143,9 @@ public class MetodosClientesSP {
             }
 
             while(rs.next()){
-                paramCli.setCodigoCli(rs.getString("codigo_prod"));
-                paramCli.setNombre(rs.getString("descripcion"));
-                paramCli.setApellido(rs.getString("preciounitario"));
+                paramCli.setCodigoCli(rs.getString("codigo_cli"));
+                paramCli.setNombre(rs.getString("nombre"));
+                paramCli.setApellido(rs.getString("apellido"));
                 paramCli.setDocumento(rs.getString("documento"));
                 paramCli.setClave(rs.getString("clave"));
 

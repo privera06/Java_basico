@@ -48,22 +48,23 @@ public class MetodosProductosSP extends ConexionBD{
         }
     }
     
-    public boolean actualizarProducto (Productos paramProd) throws SQLException {
+    public boolean actualizarProducto (String paramProd_ori, Productos paramProd_new) throws SQLException {
 
         CallableStatement stmt;
         ConexionBD objConexionBD = new ConexionBD();
         objConexionBD.cargarDriver();
         objConexionBD.conectarDB();
-                
+        System.out.println("antes call");        
         String query  = "{CALL actualizarProductoSP(?,?,?,?,?)}";
-        
+        System.out.println("despues call");   
         try{
             stmt = objConexionBD.con.prepareCall(query);
-            stmt.setString(1, paramProd.getCodigoProd());
-            stmt.setString(2, paramProd.getCodigoProd());
-            stmt.setString(3, paramProd.getDescripcion());
-            stmt.setDouble(4, paramProd.getPrecioUnitario());
-            stmt.setInt(5, paramProd.getStock());
+            System.out.println("despues prepareCall"); 
+            stmt.setString(1, paramProd_ori);
+            stmt.setString(2, paramProd_new.getCodigoProd());
+            stmt.setString(3, paramProd_new.getDescripcion());
+            stmt.setDouble(4, paramProd_new.getPrecioUnitario());
+            stmt.setInt(5, paramProd_new.getStock());
 
             stmt.executeQuery(); 
             
@@ -105,6 +106,10 @@ public class MetodosProductosSP extends ConexionBD{
             for(int i=1; i<=cantidadColumnas; i++ ){
                 modelo.addColumn(rsMd.getColumnLabel(i));
             }
+            /*modelo.addColumn("Codigo Prod.");
+            modelo.addColumn("Descripcion");
+            modelo.addColumn("Precio U.");*/
+            //modelo.addColumn("Stock prod");
 
             while(rs.next()){
                 paramProd.setCodigoProd(rs.getString("codigo_prod"));

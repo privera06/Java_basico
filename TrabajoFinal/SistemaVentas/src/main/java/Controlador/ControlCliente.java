@@ -23,6 +23,7 @@ public class ControlCliente  implements ActionListener{
     private VistaClientesPrincipal varJfrVistaCliPrinc;
     private VistaClientesSecundaria varJfrVistaCliSec;
     String accion;
+    
     /*Se crea el constructor de la clase y se le pasa el Modelo y la vista creada*/
     public ControlCliente(Clientes modCli, MetodosClientesSP metCli, VistaClientesPrincipal jfrVistaCli, VistaClientesSecundaria jfrVistaCliSec){
         
@@ -37,12 +38,21 @@ public class ControlCliente  implements ActionListener{
         this.varJfrVistaCliPrinc.jbEliminarCli.addActionListener(this);
         this.varJfrVistaCliPrinc.jbActualizarCli.addActionListener(this);
         this.varJfrVistaCliSec.jbGuardar.addActionListener(this);
+        this.varJfrVistaCliSec.jbCancelar.addActionListener(this);
     }
     /*Metodo para iniciar la vista*/
-    public void iniciar(){
+    public void iniciar() throws SQLException{
         varJfrVistaCliPrinc.setTitle("CLIENTES");
         varJfrVistaCliPrinc.setLocationRelativeTo(null);
         varJfrVistaCliPrinc.setVisible(true);
+        
+        DefaultTableModel modelo = new DefaultTableModel();
+        varJfrVistaCliPrinc.jtClientes.setModel(modelo); 
+        
+        varModCli.setCodigoCli("");
+        if(!varMetCli.mostrarCliente(varModCli, modelo))
+            JOptionPane.showMessageDialog(null,"Ocurrio un error al mostrar la lista");
+            
     }
     
     /*Metodo con las acciones que deben realizar los botones*/
@@ -50,6 +60,7 @@ public class ControlCliente  implements ActionListener{
     public void actionPerformed(ActionEvent ev ){
             
         if(ev.getSource() == varJfrVistaCliPrinc.jbBuscarCli){
+            
             DefaultTableModel modelo = new DefaultTableModel();
             varJfrVistaCliPrinc.jtClientes.setModel(modelo);
             
@@ -65,42 +76,59 @@ public class ControlCliente  implements ActionListener{
         }
     
         if(ev.getSource() == varJfrVistaCliPrinc.jbAgregarCli){
+            
             accion = "INSERT";
+            
+            varJfrVistaCliSec.setLocationRelativeTo(null);
             varJfrVistaCliSec.setVisible(true);
+            varJfrVistaCliSec.txtCodigo.setText("");
+            varJfrVistaCliSec.txtNombre.setText("");
+            varJfrVistaCliSec.txtApellido.setText("");
+            varJfrVistaCliSec.txtDocumento.setText("");
+            varJfrVistaCliSec.txtClave.setText("");            
         }
 
         if(ev.getSource() == varJfrVistaCliPrinc.jbActualizarCli){
 
-            DefaultTableModel modelo = new DefaultTableModel();
             accion = "UPDATE";
 
-            try {
-                int filaTabla = varJfrVistaCliPrinc.jtClientes.getSelectedRow();   
-
-                varModCli.setCodigoCli(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 0).toString());  
-                varModCli.setNombre(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 1).toString());
-                varModCli.setApellido(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 2).toString());
-                varModCli.setDocumento(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 3).toString());
-                varModCli.setClave(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 4).toString());
-                
-                varJfrVistaCliSec.txtCodigo.setText(varModCli.getCodigoCli());
-                varJfrVistaCliSec.txtNombre.setText(varModCli.getNombre());
-                varJfrVistaCliSec.txtApellido.setText(varModCli.getApellido());
-                varJfrVistaCliSec.txtDocumento.setText(varModCli.getDocumento());
-                varJfrVistaCliSec.txtClave.setText(varModCli.getClave());
-                
-                varJfrVistaCliSec.setVisible(true);
-                
-                if(!varMetCli.mostrarCliente(varModCli,modelo)){
-                    JOptionPane.showMessageDialog(null,"Error al realizar la actualizacion");
-                }
-                    
-            }catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            int filaTabla = varJfrVistaCliPrinc.jtClientes.getSelectedRow();
+            varModCli.setCodigoCli(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 0).toString());
+            varModCli.setNombre(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 1).toString());
+            varModCli.setApellido(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 2).toString());
+            varModCli.setDocumento(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 3).toString());
+            varModCli.setClave(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 4).toString());
+            
+            varJfrVistaCliSec.setLocationRelativeTo(null);
+            varJfrVistaCliSec.setVisible(true);
+            
+            varJfrVistaCliSec.txtCodigo.setText(varModCli.getCodigoCli());
+            varJfrVistaCliSec.txtNombre.setText(varModCli.getNombre());
+            varJfrVistaCliSec.txtApellido.setText(varModCli.getApellido());
+            varJfrVistaCliSec.txtDocumento.setText(varModCli.getDocumento());
+            varJfrVistaCliSec.txtClave.setText(varModCli.getClave());
+            
         }        
         
+        if(ev.getSource() == varJfrVistaCliPrinc.jbEliminarCli){
+            
+            int filaTabla = varJfrVistaCliPrinc.jtClientes.getSelectedRow();
+            varModCli.setCodigoCli(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 0).toString());
+
+            try {
+                if(varMetCli.eliminarCliente(varModCli)){
+                    JOptionPane.showMessageDialog(null,"Registro eliminado");
+                }else
+                    JOptionPane.showMessageDialog(null,"Error al registrar");
+            } catch (SQLException ex) {
+                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         if(ev.getSource() == varJfrVistaCliSec.jbGuardar){
+            
+            String varModCli_ori = varModCli.getCodigoCli();
+
             /*Se setean las variables del Modelo obtenidas de las cajas de texto de la Vista*/
             varModCli.setCodigoCli(varJfrVistaCliSec.txtCodigo.getText());
             varModCli.setNombre(varJfrVistaCliSec.txtNombre.getText());
@@ -117,7 +145,7 @@ public class ControlCliente  implements ActionListener{
                         JOptionPane.showMessageDialog(null,"Error al registrar");
                 }
                 else if("UPDATE".equals(accion)){
-                    if(varMetCli.actualizarCliente(varModCli)){
+                    if(varMetCli.actualizarCliente(varModCli_ori, varModCli)){
                         JOptionPane.showMessageDialog(null,"Actualizacion exitosa");
                         varJfrVistaCliSec.dispose();
                     }else
@@ -129,19 +157,10 @@ public class ControlCliente  implements ActionListener{
                 Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        if(ev.getSource() == varJfrVistaCliPrinc.jbEliminarCli){
-            int filaTabla = varJfrVistaCliPrinc.jtClientes.getSelectedRow();
-            varModCli.setCodigoCli(varJfrVistaCliPrinc.jtClientes.getValueAt(filaTabla, 0).toString());
-
-            try {
-                if(varMetCli.eliminarCliente(varModCli)){
-                    JOptionPane.showMessageDialog(null,"Registro eliminado");
-                }else
-                    JOptionPane.showMessageDialog(null,"Error al registrar");
-            } catch (SQLException ex) {
-                Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }  
+        
+        if(ev.getSource() == varJfrVistaCliSec.jbCancelar){
+            
+            varJfrVistaCliSec.dispose();
+        }
     }
 }

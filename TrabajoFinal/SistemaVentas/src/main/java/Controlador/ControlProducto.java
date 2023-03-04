@@ -22,6 +22,7 @@ public class ControlProducto implements ActionListener {
     private VistaProductosPrincipal varJfrVistaProd;
     private VistaProductosSecundaria varJfrVistaProdSec;
     String accion;
+    
     /*Se crea el constructor de la clase y se le pasa el Modelo y la vista creada*/
     public ControlProducto(Productos modProd, MetodosProductosSP metProd, VistaProductosPrincipal jfrVistaProd, VistaProductosSecundaria jfrVistaProdSec){
         
@@ -36,18 +37,26 @@ public class ControlProducto implements ActionListener {
         this.varJfrVistaProd.jbEliminarProd.addActionListener(this);
         this.varJfrVistaProd.jbActualizarProd.addActionListener(this);
         this.varJfrVistaProdSec.jbGuardar.addActionListener(this);
+        this.varJfrVistaProdSec.jbCancelar.addActionListener(this);
     }
     /*Metodo para iniciar la vista*/
-    public void iniciar(){
+    public void iniciar() throws SQLException{
         varJfrVistaProd.setTitle("PRODUCTOS");
         varJfrVistaProd.setLocationRelativeTo(null);
         varJfrVistaProd.setVisible(true);
+        
+        DefaultTableModel modelo = new DefaultTableModel();
+        varJfrVistaProd.jtProductos.setModel(modelo); 
+        
+        varModProd.setCodigoProd("");
+        if(!varMetProd.mostrarProducto(varModProd, modelo))
+            JOptionPane.showMessageDialog(null,"Ocurrio un error al mostrar la lista");     
     }
     
     /*Metodo con las acciones que deben realizar los botones*/
     @Override
     public void actionPerformed(ActionEvent ev ){
-        
+
         if(ev.getSource() == varJfrVistaProd.jbBuscarProd){
             DefaultTableModel modelo = new DefaultTableModel();
             varJfrVistaProd.jtProductos.setModel(modelo);
@@ -64,40 +73,42 @@ public class ControlProducto implements ActionListener {
         }
     
         if(ev.getSource() == varJfrVistaProd.jbAgregarProd){
+            
             accion = "INSERT";
+            
+            varJfrVistaProdSec.setLocationRelativeTo(null);
             varJfrVistaProdSec.setVisible(true);
+            varJfrVistaProdSec.txtCodProd.setText("");
+            varJfrVistaProdSec.txtDescripcion.setText("");
+            varJfrVistaProdSec.txtPrecio.setText("");
+            varJfrVistaProdSec.txtStock.setText("");
         }
 
         if(ev.getSource() == varJfrVistaProd.jbActualizarProd){
 
-            DefaultTableModel modelo = new DefaultTableModel();
             accion = "UPDATE";
 
-            try {
-                int filaTabla = varJfrVistaProd.jtProductos.getSelectedRow();   
+            int filaTabla = varJfrVistaProd.jtProductos.getSelectedRow();   
 
-                varModProd.setCodigoProd(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 0).toString());                
-                varModProd.setDescripcion(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 1).toString()); 
-                varModProd.setPrecioUnitario(Double.parseDouble(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 2).toString()));
-                varModProd.setStock(Integer.parseInt(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 3).toString()));
-                
-                varJfrVistaProdSec.txtCodProd.setText(varModProd.getCodigoProd());
-                varJfrVistaProdSec.txtDescripcion.setText(varModProd.getDescripcion());
-                varJfrVistaProdSec.txtPrecio.setText(Double.toString(varModProd.getPrecioUnitario()));
-                varJfrVistaProdSec.txtStock.setText(String.valueOf(varModProd.getStock()));
-                
-                varJfrVistaProdSec.setVisible(true);
-                
-                if(!varMetProd.mostrarProducto(varModProd,modelo)){
-                    JOptionPane.showMessageDialog(null,"Error al realizar la actualizacion");
-                }
-                    
-            }catch (SQLException ex) {
-                Logger.getLogger(ControlProducto.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            varModProd.setCodigoProd(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 0).toString());                
+            varModProd.setDescripcion(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 1).toString()); 
+            varModProd.setPrecioUnitario(Double.parseDouble(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 2).toString()));
+            varModProd.setStock(Integer.parseInt(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 3).toString()));
+
+            varJfrVistaProdSec.setLocationRelativeTo(null);
+            varJfrVistaProdSec.setVisible(true);
+
+            varJfrVistaProdSec.txtCodProd.setText(varModProd.getCodigoProd());
+            varJfrVistaProdSec.txtDescripcion.setText(varModProd.getDescripcion());
+            varJfrVistaProdSec.txtPrecio.setText(Double.toString(varModProd.getPrecioUnitario()));
+            varJfrVistaProdSec.txtStock.setText(String.valueOf(varModProd.getStock()));
+
         }        
         
         if(ev.getSource() == varJfrVistaProdSec.jbGuardar){
+            
+            String varModProd_ori = varModProd.getCodigoProd();
+
             /*Se setean las variables del Modelo obtenidas de las cajas de texto de la Vista*/
             varModProd.setCodigoProd(varJfrVistaProdSec.txtCodProd.getText());
             varModProd.setDescripcion(varJfrVistaProdSec.txtDescripcion.getText());
@@ -113,7 +124,8 @@ public class ControlProducto implements ActionListener {
                         JOptionPane.showMessageDialog(null,"Error al registrar");
                 }
                 else if("UPDATE".equals(accion)){
-                    if(varMetProd.actualizarProducto(varModProd)){
+                    System.out.println("Paso accion");
+                    if(varMetProd.actualizarProducto(varModProd_ori, varModProd)){
                         JOptionPane.showMessageDialog(null,"Actualizacion exitosa");
                         varJfrVistaProdSec.dispose();
                     }else
@@ -127,6 +139,7 @@ public class ControlProducto implements ActionListener {
         }
 
         if(ev.getSource() == varJfrVistaProd.jbEliminarProd){
+
             int filaTabla = varJfrVistaProd.jtProductos.getSelectedRow();
             varModProd.setCodigoProd(varJfrVistaProd.jtProductos.getValueAt(filaTabla, 0).toString());
 
@@ -138,6 +151,11 @@ public class ControlProducto implements ActionListener {
             } catch (SQLException ex) {
                 Logger.getLogger(ControlProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }  
+        }
+        
+        if(ev.getSource() == varJfrVistaProdSec.jbCancelar){
+            
+            varJfrVistaProdSec.dispose();
+        }        
     }
 }

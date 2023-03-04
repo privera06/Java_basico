@@ -6,8 +6,13 @@ package Controlador;
 
 import Modelo.Clientes;
 import Modelo.MetodosClientesSP;
+import Modelo.MetodosPedidosSP;
+import Modelo.MetodosProductosSP;
+import Modelo.Pedido;
+import Modelo.Productos;
 import Vistas.VistaLoginUserCli;
-import Vistas.VistaPedidos;
+import Vistas.VistaPedidosPrincipal;
+import Vistas.VistaPedidosSecundaria;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -57,15 +62,21 @@ public class ControlLoginUserCli implements ActionListener {
                 String resultado = varMetCli.validarUsuario(varModCli);
 
                 switch (resultado) {
-                    case "ENCONTRADO_CINV" -> JOptionPane.showMessageDialog(null,"Loggin succesfull..!!!");
-                    case "ENCONTRADO_CVAL" -> {JOptionPane.showMessageDialog(null,"Invalid password..!!!");
-                                                /*VistaPedidos objVistaPed = new VistaPedidos();
-                                                objVistaPed.*/
+                    case "ENCONTRADO_CVAL" -> {
+                        JOptionPane.showMessageDialog(null,"Loggin succesfull..!!!");
+                        Productos objModProd = new Productos();
+                        Pedido objModPed = new Pedido();
+                        MetodosProductosSP objMetProd = new MetodosProductosSP();
+                        MetodosPedidosSP objMetPed = new MetodosPedidosSP();
+                        VistaPedidosPrincipal objJfrVistaPedPrinc = new VistaPedidosPrincipal();  
+                        VistaPedidosSecundaria objJfrVistaPedSec = new VistaPedidosSecundaria();   
+                        ControlPedido objCtrlPed = new ControlPedido(objModProd, objModPed, objMetProd, objMetPed, objJfrVistaPedPrinc, objJfrVistaPedSec);
+                        varJfrVistaLogCli.dispose();
+                        objCtrlPed.iniciar();
                     }
+                    case "ENCONTRADO_CINV" -> JOptionPane.showMessageDialog(null,"Invalid password..!!!");
                     default -> JOptionPane.showMessageDialog(null,"User not found..!!!");
                 }
-                
-                
 
             } catch (SQLException ex) {
                 Logger.getLogger(ControlLoginUserEmp.class.getName()).log(Level.SEVERE, null, ex);

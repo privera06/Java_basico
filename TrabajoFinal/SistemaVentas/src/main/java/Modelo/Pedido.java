@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
 import java.util.ArrayList;
@@ -29,17 +25,22 @@ public class Pedido {
     /**
      * @return the arrProdutos
      */
-    public String getArrProductosString() {
+    public String getArrProductosString(String cadenaProd) {
         String arrProductosString="";
-        for (int i = 0; i < getArrProductos().size(); i++) {
-            arrProductosString = arrProductosString + getArrProductos().get(i).getCodigoProd()+ ',';
-            arrProductosString = arrProductosString + getArrProductos().get(i).getDescripcion()+ ',';
-            arrProductosString = arrProductosString + getArrProductos().get(i).getPrecioUnitario()+ ',';
-            arrProductosString = arrProductosString + getArrProductos().get(i).getStock();
-            
+        System.out.println(" PEDIDO.JAVA");
+        System.out.println(" cadenaProd="+cadenaProd);
+        System.out.println(" getArrProductos().size()="+getArrProductos().size());
+        //for (int i = 0; i < getArrProductos().size(); i++) {
+            System.out.println(" PEDIDO.JAVA arrProductosString");
+            arrProductosString = arrProductosString + getArrProductos().get(getArrProductos().size()-1).getCodigoProd()+ ',';
+            arrProductosString = arrProductosString + getArrProductos().get(getArrProductos().size()-1).getDescripcion()+ ',';
+            arrProductosString = arrProductosString + getArrProductos().get(getArrProductos().size()-1).getPrecioUnitario()+ ',';
+            arrProductosString = arrProductosString + getArrProductos().get(getArrProductos().size()-1).getStock();
             arrProductosString= arrProductosString + ';';
-        }
-        return arrProductosString;
+        //}
+        System.out.println(" PEDIDO.JAVA arrProductosString" + arrProductosString);
+        System.out.println(" PEDIDO.JAVA cadenaProd.concat(arrProductosString)" + cadenaProd.concat(arrProductosString));
+        return cadenaProd.concat(arrProductosString);
     }
 
     /**
@@ -47,21 +48,51 @@ public class Pedido {
      */
     public void setArrProductosString(String arrProductosString) {
         ArrayList<Productos> nuevoArrProductos= new ArrayList<Productos>();   
-        
+        System.out.println(" PEDIDO.JAVA - setArrProductosString");
+        int ini = 0;
         while (arrProductosString.indexOf(',')>= 0){ //si entra, existe al menos un producto adicional
             Productos varProducto = new Productos();
-            varProducto.setCodigoProd(arrProductosString.substring(0,arrProductosString.indexOf(','))); //obtenemos valor de codigo 
-            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',')); //avanzamos cadena
+
+            if(ini == 0){
+                System.out.println("INICIO WHILE 0 arrProductosString = " + arrProductosString);
+                varProducto.setCodigoProd(arrProductosString.substring(0,arrProductosString.indexOf(','))); //obtenemos valor de codigo 
+                System.out.println(" PEDIDO.JAVA - varProducto.getCodigoProd ="+ varProducto.getCodigoProd());                
+            }else{
+                System.out.println("INICIO WHILE 1 arrProductosString = " + arrProductosString);
+                varProducto.setCodigoProd(arrProductosString.substring(1,arrProductosString.indexOf(','))); //obtenemos valor de codigo 
+                System.out.println(" PEDIDO.JAVA - varProducto.getCodigoProd ="+ varProducto.getCodigoProd());                
+            }
+                
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);
+            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',',1)); //avanzamos cadena
+            System.out.println(" arrProductosString.indexOf(',',1) = " + arrProductosString.indexOf(',',1));
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);           
+            varProducto.setDescripcion(arrProductosString.substring(1,arrProductosString.indexOf(',',1))); //obtenemos valor de descripcion 
+            System.out.println(" PEDIDO.JAVA - varProducto.getDescripcion ="+ varProducto.getDescripcion());
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);
+            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',',1)); //avanzamos cadena
+            System.out.println(" arrProductosString.indexOf(',',1) = " + arrProductosString.indexOf(',',1));
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);
+            varProducto.setPrecioUnitario(Double.parseDouble(arrProductosString.substring(1,arrProductosString.indexOf(',',1)))); //obtenemos valor de precio 
+            System.out.println(" PEDIDO.JAVA - varProducto.getPrecioUnitario ="+ varProducto.getPrecioUnitario());
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);
+            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',',1)); //avanzamos cadena
+            System.out.println(" arrProductosString.indexOf(',',1) = " + arrProductosString.indexOf(',',1));
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);
+            varProducto.setStock(Integer.parseInt(arrProductosString.substring(1,arrProductosString.indexOf(';')))); //obtenemos valor de stock 
+            System.out.println(" PEDIDO.JAVA - varProducto.getStock ="+ varProducto.getStock());
+            System.out.println("------------------ " );
+            System.out.println(" arrProductosString = " + arrProductosString);
+            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(';')); //avanzamos cadena
+            System.out.println(" arrProductosString = " + arrProductosString);
             
-            varProducto.setDescripcion(arrProductosString.substring(0,arrProductosString.indexOf(','))); //obtenemos valor de descripcion 
-            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',')); //avanzamos cadena
-            
-            varProducto.setPrecioUnitario(Double.parseDouble(arrProductosString.substring(0,arrProductosString.indexOf(',')))); //obtenemos valor de precio 
-            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',')); //avanzamos cadena
-            
-            varProducto.setStock(Integer.parseInt(arrProductosString.substring(0,arrProductosString.indexOf(';')))); //obtenemos valor de stock 
-            arrProductosString=arrProductosString.substring(arrProductosString.indexOf(',')); //avanzamos cadena
-            
+            ini = 1;
             nuevoArrProductos.add(varProducto);
         }
         
@@ -83,7 +114,15 @@ public class Pedido {
     }
 
     public void agregarProducto(Productos producto) {
+        System.out.println(" PEDIDO.JAVA");
+        System.out.println("agregarProducto");
         this.getArrProductos().add(producto);
+        System.out.println("agregarProducto = "+getArrProductos().get(0).getCodigoProd());
+        System.out.println("agregarProducto = "+getArrProductos().get(0).getDescripcion());
+        System.out.println("agregarProducto = "+getArrProductos().get(0).getPrecioUnitario());
+        System.out.println("getArrProductos().size() = "+getArrProductos().listIterator(0));
+        
+        System.out.println(" PEDIDO.JAVA");
     }
 
     public void eliminarProducto(Productos producto) {
@@ -98,6 +137,15 @@ public class Pedido {
         this.getArrProductos().remove(contador);
     }
 
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+    
     private String codigoPed;
-    private ArrayList<Productos> arrProductos;
+    private int cantidad;
+    private ArrayList<Productos> arrProductos = new ArrayList<>();
 }
